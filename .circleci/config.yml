@@ -25,11 +25,14 @@ workflows:
     jobs:
       - aws-eks/create-cluster:
           cluster-name: my-eks-demo
+          context: cdk8s
       - test-cluster:
           cluster-name: my-eks-demo
+          context: cdk8s
           requires:
             - aws-eks/create-cluster
       - aws-eks/delete-cluster:
           cluster-name: my-eks-demo
+          context: cdk8s
           requires:
             - test-cluster
