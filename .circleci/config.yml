@@ -1,38 +1,38 @@
-workflows:
-  version: 2
-  build-test-&-deploy:
-    jobs:
-      - build-app
-      - test-app:
-          requires:
-            - build-app
-      - deploy-app:
-          requires:
-            - test-app
+version: 2.1
 
-version: 2
+orbs:
+  aws-eks: circleci/aws-eks@0.2.6
+
 jobs:
-  build-app:
-    working_directory: ~/project
-    docker:
-    - image: circleci/node:10.16.3
+  test-cluster:
+    executor: aws-eks/python3
+    parameters:
+      cluster-name:
+        description: |
+          Name of the EKS cluster
+        type: string
     steps:
-    - setup_remote_docker
-    - checkout
-    - run:
-        name: Update NPM
-        command: 'sudo npm install -g npm@latest'
-  
-  test-app:
-    working_directory: ~/project
-    docker:
-    - image: circleci/node:10.16.3
-    steps:
-    - checkout
-  
-  deploy-app:
-    working_directory: ~/project
-    docker:
-    - image: circleci/node:10.16.3
-    steps:
-    - checkout
+      - kubernetes/install
+      - aws-eks/update-kubeconfig-with-authenticator:
+          cluster-name: << parameters.cluster-name >>
+      - run:
+          command: |
+            kubectl get services
+          name: Test cluster
+orbs:
+  aws-eks: circleci/aws-eks@0.2.3
+  kubernetes: circleci/kubernetes@0.4.0
+version: 2.1
+workflows:
+  deployment:
+    jobs:
+      - aws-eks/create-cluster:
+          cluster-name: my-eks-demo
+      - test-cluster:
+          cluster-name: my-eks-demo
+          requires:
+            - aws-eks/create-cluster
+      - aws-eks/delete-cluster:
+          cluster-name: my-eks-demo
+          requires:
+            - test-cluster
