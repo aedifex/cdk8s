@@ -28,18 +28,18 @@ jobs:
 workflows:
   deployment:
     jobs:
-      #- aws-eks/create-cluster:
-      #    cluster-name: my-eks-demo
-      #    context: cdk8s
-      #- test-cluster:
-      #    cluster-name: my-eks-demo
-      #    aws-region: us-west-2
-      #    context: cdk8s
-      #    requires:
-       #     - aws-eks/create-cluster
-      - aws-eks/delete-cluster:
-          cluster-name: my-eks-demo
+      - aws-eks/create-cluster:
+          cluster-name: another-eks-demo
+          context: cdk8s
+      - test-cluster:
+          cluster-name: another-eks-demo
           aws-region: us-west-2
           context: cdk8s
-          #requires:
-          #  - test-cluster
+          requires:
+            - aws-eks/create-cluster
+      - aws-eks/delete-cluster:
+          cluster-name: another-eks-demo
+          aws-region: us-west-2
+          context: cdk8s
+          requires:
+            - test-cluster
