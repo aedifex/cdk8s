@@ -6,6 +6,8 @@ version: 2.1
 jobs:
   test-cluster:
     executor: aws-eks/python3
+      environment:
+        AWS_REGION: us-west-2
     parameters:
       cluster-name:
         description: |
