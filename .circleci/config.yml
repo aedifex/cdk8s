@@ -6,8 +6,6 @@ version: 2.1
 jobs:
   test-cluster:
     executor: aws-eks/python3
-      environment:
-        AWS_REGION: us-west-2
     parameters:
       cluster-name:
         description: |
@@ -21,6 +19,7 @@ jobs:
       - kubernetes/install
       - aws-eks/update-kubeconfig-with-authenticator:
           cluster-name: << parameters.cluster-name >>
+          aws-region: << parameters.aws-region>>
       - run:
           command: |
             kubectl get services
