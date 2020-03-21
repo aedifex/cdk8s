@@ -35,6 +35,8 @@ workflows:
           cluster-name: my-eks-demo
           aws-region: us-west-2
           context: cdk8s
+          requires:
+            - aws-eks/create-cluster
       - aws-eks/delete-cluster:
           cluster-name: my-eks-demo
           aws-region: us-west-2
