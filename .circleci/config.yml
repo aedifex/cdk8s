@@ -49,6 +49,8 @@ jobs:
       - run:
           name: Update Cluster
           command: |
+            cat yaml/hello-kubernetes.custom-message.tmpl | \
+            envsubst > yaml/hello-kubernetes.custom-message.yaml && \
             kubectl apply -f yaml/hello-kubernetes.custom-message.yaml --validate=false
 
 workflows:
