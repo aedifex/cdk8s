@@ -47,6 +47,9 @@ jobs:
             kubectl get services
           name: Test cluster
       - run:
+          name: Install envar utility (envsubst)
+          command: sudo apt-get install gettext-base
+      - run:
           name: Update Cluster
           command: |
             cat yaml/hello-kubernetes.custom-message.tmpl | \
