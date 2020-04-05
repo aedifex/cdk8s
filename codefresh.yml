@@ -24,7 +24,7 @@ steps:
     title: "Building Docker image"
     type: "build"
     image_name: "aedifex/cdk8s"
-    working_directory: "~/project"
+    working_directory: "${{clone}}"
     commands:
       - "ls"
     tag: "${{CF_BRANCH_TAG_NORMALIZED}}"
