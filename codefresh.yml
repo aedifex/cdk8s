@@ -6,7 +6,7 @@ version: "1.0"
 stages:
   - "clone"
   - "build"
-  # - "test"
+  - "test"
 
 steps:
   clone:
@@ -16,6 +16,7 @@ steps:
     # CF_BRANCH value is auto set when pipeline is triggered
     # Learn more at codefresh.io/docs/docs/codefresh-yaml/variables/
     revision: "${{CF_BRANCH}}"
+    working_directory: "~/project"
     git: "github"
     stage: "clone"
 
