@@ -25,6 +25,8 @@ steps:
     type: "build"
     image_name: "aedifex/cdk8s"
     working_directory: "~/project"
+    commands:
+      - "ls"
     tag: "${{CF_BRANCH_TAG_NORMALIZED}}"
     dockerfile: "Dockerfile"
     stage: "build"
