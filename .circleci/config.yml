@@ -69,10 +69,13 @@ workflows:
       #    context: cdk8s
       #    requires:
       #      - aws-eks/create-cluster
-      - update-cluster:
+      - aws-eks/install-helm-on-cluster:
           cluster-name: another-eks-demo
-          aws-region: us-west-2
           context: cdk8s
+      #- update-cluster:
+      #    cluster-name: another-eks-demo
+      #    aws-region: us-west-2
+      #    context: cdk8s
        #   requires:
        #     - aws-eks/create-cluster
       #- aws-eks/delete-cluster:
