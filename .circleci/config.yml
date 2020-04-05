@@ -71,6 +71,7 @@ workflows:
       #      - aws-eks/create-cluster
       - aws-eks/install-helm-on-cluster:
           cluster-name: another-eks-demo
+          aws-region: us-west-2
           context: cdk8s
       #- update-cluster:
       #    cluster-name: another-eks-demo
