@@ -69,39 +69,45 @@ jobs:
 workflows:
   provision-cluster:
     jobs:
-       # - aws-eks/create-cluster:
-       #     cluster-name: another-eks-demo
-       #     aws-region: us-west-2
-       #     context: cdk8s
-       # - test-cluster:
-       #     cluster-name: another-eks-demo
-       #     aws-region: us-west-2
-       #     context: cdk8s
-       #     requires:
-       #       - aws-eks/create-cluster
-       # - aws-eks/install-helm-on-cluster:
-       #     cluster-name: another-eks-demo
-       #     aws-region: us-west-2
-       #     context: cdk8s
-       #     requires:
-       #       - test-cluster
-       # - aws-eks/install-helm-chart:
-       #     cluster-name: another-eks-demo
-       #     aws-region: us-west-2
-       #     chart: helloworld-chart
-       #     context: cdk8s
-       #     requires:
-       #       - aws-eks/install-helm-on-cluster
-      # - update-cluster:
-      #     cluster-name: another-eks-demo
-      #     aws-region: us-west-2
-      #     context: cdk8s
-      #     requires:
-      #       - aws-eks/install-helm-on-cluster
+      - aws-eks/create-cluster:
+         cluster-name: another-eks-demo
+         aws-region: us-west-2
+         context: cdk8s
+      - test-cluster:
+         cluster-name: another-eks-demo
+         aws-region: us-west-2
+         context: cdk8s
+         requires:
+           - aws-eks/create-cluster
+      - aws-eks/install-helm-on-cluster:
+         cluster-name: another-eks-demo
+         aws-region: us-west-2
+         context: cdk8s
+         requires:
+           - test-cluster
+      - aws-eks/install-helm-chart:
+         cluster-name: another-eks-demo
+         aws-region: us-west-2
+         chart: helloworld-chart
+         context: cdk8s
+         requires:
+           - aws-eks/install-helm-on-cluster
+      - update-cluster:
+          cluster-name: another-eks-demo
+          aws-region: us-west-2
+          context: cdk8s
+          requires:
+            - aws-eks/install-helm-on-cluster
+      - approve-cluster-termination:
+          type: approval
+          requires:
+            - update-cluster
       - aws-eks/delete-cluster:
           cluster-name: another-eks-demo
           aws-region: us-west-2
           context: cdk8s
+          requires:
+            - approve-cluster-termination
           #requires:
           #  - test-cluster
   # build-app-&-deploy-via-helm:
