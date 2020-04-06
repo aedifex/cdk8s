@@ -106,8 +106,8 @@ workflows:
           cluster-name: another-eks-demo
           aws-region: us-west-2
           context: cdk8s
-          requires:
-            - approve-cluster-termination
+          # requires:
+          #   - approve-cluster-termination
           #requires:
           #  - test-cluster
   # build-app-&-deploy-via-helm:
