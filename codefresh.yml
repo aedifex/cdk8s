@@ -10,7 +10,7 @@ steps:
     title: Building Node.Js Docker Image
     type: build
     image_name: my-app
-    working_directory: 'app'
+    working_directory: ${{clone}}
     # tag: 'master'
     dockerfile: Dockerfile
     # build_arguments:
