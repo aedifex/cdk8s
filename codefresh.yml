@@ -25,9 +25,10 @@ steps:
     image_name: "aedifex/cdk8s"
     stage: "build"
     working_directory: "${{clone}}"
+    dockerfile: Dockerfile
     arguments:
       tag: "${{CF_BRANCH_TAG_NORMALIZED}}"
-      dockerfile: "Dockerfile"
+      # dockerfile: "Dockerfile"
       working_directory: "app"
 
 
