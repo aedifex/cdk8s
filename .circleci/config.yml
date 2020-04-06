@@ -55,35 +55,46 @@ jobs:
             cat yaml/hello-kubernetes.custom-message.tmpl | \
             envsubst > yaml/hello-kubernetes.custom-message.yaml && \
             kubectl apply -f yaml/hello-kubernetes.custom-message.yaml --validate=false
+  build:
+    machine: true
+    steps:
+      - checkout
+      - run:
+          name: Build Image
+          command:
+            docker build --no-cache --build-arg IMAGE_VERSION="1.7" --build-arg IMAGE_CREATE_DATE="`date -u +"%Y-%m-%dT%H:%M:%SZ"`" --build-arg IMAGE_SOURCE_REVISION="`git rev-parse HEAD`" -f Dockerfile -t "hello-kubernetes:1.7" app
 
 workflows:
-  deployment:
-    jobs:
-      - aws-eks/create-cluster:
-          cluster-name: another-eks-demo
-          aws-region: us-west-2
-          context: cdk8s
-      - test-cluster:
-          cluster-name: another-eks-demo
-          aws-region: us-west-2
-          context: cdk8s
-          requires:
-            - aws-eks/create-cluster
-      - aws-eks/install-helm-on-cluster:
-          cluster-name: another-eks-demo
-          aws-region: us-west-2
-          context: cdk8s
-          requires:
-            - test-cluster
-      - update-cluster:
-          cluster-name: another-eks-demo
-          aws-region: us-west-2
-          context: cdk8s
-          requires:
-            - aws-eks/install-helm-on-cluster
-      #- aws-eks/delete-cluster:
+  #provision-cluster:
+   # jobs:
+      # - aws-eks/create-cluster:
+      #     cluster-name: another-eks-demo
+      #     aws-region: us-west-2
+      #     context: cdk8s
+      # - test-cluster:
+      #     cluster-name: another-eks-demo
+      #     aws-region: us-west-2
+      #     context: cdk8s
+      #     requires:
+      #       - aws-eks/create-cluster
+      # - aws-eks/install-helm-on-cluster:
+      #     cluster-name: another-eks-demo
+      #     aws-region: us-west-2
+      #     context: cdk8s
+      #     requires:
+      #       - test-cluster
+      # - update-cluster:
+      #     cluster-name: another-eks-demo
+      #     aws-region: us-west-2
+      #     context: cdk8s
+      #     requires:
+      #       - aws-eks/install-helm-on-cluster
+      # #- aws-eks/delete-cluster:
       #    cluster-name: another-eks-demo
       #    aws-region: us-west-2
       #    context: cdk8s
       #    requires:
       #      - test-cluster
+  build-app-&-deploy-via-helm:
+    jobs:
+      - build
