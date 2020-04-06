@@ -5,7 +5,7 @@ version: "1.0"
 # Stages can help you organize your steps in stages
 stages:
   - "clone"
-  - "build"
+  # - "build"
   - "test"
 
 steps:
@@ -25,8 +25,6 @@ steps:
     type: "build"
     image_name: "aedifex/cdk8s"
     working_directory: "${{clone}}"
-    commands:
-      - "ls"
     tag: "${{CF_BRANCH_TAG_NORMALIZED}}"
     dockerfile: "Dockerfile"
     stage: "build"
@@ -37,6 +35,6 @@ steps:
     image: "ubuntu:latest" # The image in which command will be executed
     working_directory: "${{clone}}" # Running command where code cloned
     commands:
-      - "ls"
+      - "pwd && ls"
     stage: "test"
 
