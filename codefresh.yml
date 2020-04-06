@@ -26,6 +26,7 @@ steps:
     working_directory: "${{clone}}"
     tag: "${{CF_BRANCH_TAG_NORMALIZED}}"
     dockerfile: "Dockerfile"
+    build_arguments: app
     stage: "build"
 
   test:
