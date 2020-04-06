@@ -29,7 +29,7 @@ steps:
     arguments:
       tag: "${{CF_BRANCH_TAG_NORMALIZED}}"
       # dockerfile: "Dockerfile"
-      working_directory: "app"
+      # working_directory: "app"
 
 
   test:
