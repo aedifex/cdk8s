@@ -97,7 +97,7 @@ workflows:
           aws-region: us-west-2
           context: cdk8s
           requires:
-            - aws-eks/install-helm-on-cluster
+            - aws-eks/install-helm-chart
       - approve-cluster-termination:
           type: approval
           requires:
