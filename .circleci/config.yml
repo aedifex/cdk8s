@@ -67,8 +67,8 @@ jobs:
             docker images
 
 workflows:
-  #provision-cluster:
-   # jobs:
+  provision-cluster:
+    jobs:
       # - aws-eks/create-cluster:
       #     cluster-name: another-eks-demo
       #     aws-region: us-west-2
