@@ -91,12 +91,12 @@ workflows:
       #     context: cdk8s
       #     requires:
       #       - aws-eks/install-helm-on-cluster
-      # #- aws-eks/delete-cluster:
-      #    cluster-name: another-eks-demo
-      #    aws-region: us-west-2
-      #    context: cdk8s
-      #    requires:
-      #      - test-cluster
-  build-app-&-deploy-via-helm:
-    jobs:
-      - build
+      - aws-eks/delete-cluster:
+          cluster-name: another-eks-demo
+          aws-region: us-west-2
+          context: cdk8s
+          #requires:
+          #  - test-cluster
+  # build-app-&-deploy-via-helm:
+  #   jobs:
+  #     - build
