@@ -24,6 +24,6 @@ test:
     type: "freestyle" # Run any command
     image: "ubuntu:latest" # The image in which command will be executed
     working_directory: "${{clone}}" # Running command where code cloned
-    stage: "test"
+    stage: "clone"
     commands:
       - "ls"
