@@ -55,16 +55,16 @@ jobs:
             cat yaml/hello-kubernetes.custom-message.tmpl | \
             envsubst > yaml/hello-kubernetes.custom-message.yaml && \
             kubectl apply -f yaml/hello-kubernetes.custom-message.yaml --validate=false
-  build:
+  build-docker:
     machine: true
     steps:
       - checkout
       - run:
           name: Build Image
           command: |
-            # docker build --no-cache --build-arg IMAGE_VERSION="1.7" --build-arg IMAGE_CREATE_DATE="`date -u +"%Y-%m-%dT%H:%M:%SZ"`" --build-arg IMAGE_SOURCE_REVISION="`git rev-parse HEAD`" -f Dockerfile -t "hello-kubernetes:1.7" app
-            docker build .
-            docker images
+            # docker build --no-cache --build-arg IMAGE_CREATE_DATE="`date`" -f Dockerfile -t "chriscircleci/hello-kubernetes:blackops" app
+            # docker build .
+            # docker images
 
 workflows:
   provision-cluster:
