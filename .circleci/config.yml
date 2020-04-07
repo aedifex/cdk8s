@@ -63,7 +63,7 @@ jobs:
       - run:
           name: Build Image
           command: |
-            docker build --no-cache --build-arg IMAGE_CREATE_DATE="`date`" -f Dockerfile -t "chriscircleci/hello-kubernetes:blackops" app
+            docker build --no-cache --build-arg IMAGE_CREATE_DATE="`date`" -t "chriscircleci/hello-kubernetes:blackops" .
             # docker build .
             # docker images
       - run:
