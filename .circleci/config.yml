@@ -65,6 +65,7 @@ jobs:
             docker build --no-cache --build-arg IMAGE_CREATE_DATE="`date`" -f Dockerfile -t "chriscircleci/hello-kubernetes:blackops" app
             # docker build .
             # docker images
+      - run:
           name: Docker Login
           command: docker login -u $DOCKER_USER -p $DOCKER_PASS
 
