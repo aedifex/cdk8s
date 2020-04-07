@@ -62,54 +62,55 @@ jobs:
       - run:
           name: Build Image
           command: |
-            # docker build --no-cache --build-arg IMAGE_CREATE_DATE="`date`" -f Dockerfile -t "chriscircleci/hello-kubernetes:blackops" app
+            docker build --no-cache --build-arg IMAGE_CREATE_DATE="`date`" -f Dockerfile -t "chriscircleci/hello-kubernetes:blackops" app
             # docker build .
             # docker images
+          name: Docker Login
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
 
 workflows:
-  provision-cluster:
-    jobs:
-      - aws-eks/create-cluster:
-         cluster-name: another-eks-demo
-         aws-region: us-west-2
-         context: cdk8s
-      - test-cluster:
-         cluster-name: another-eks-demo
-         aws-region: us-west-2
-         context: cdk8s
-         requires:
-           - aws-eks/create-cluster
-      - aws-eks/install-helm-on-cluster:
-         cluster-name: another-eks-demo
-         aws-region: us-west-2
-         context: cdk8s
-         requires:
-           - test-cluster
-      # # - aws-eks/install-helm-chart:
-      # #    cluster-name: another-eks-demo
-      # #    aws-region: us-west-2
-      # #    chart: helloworld-chart
-      # #    context: cdk8s
-      # #    requires:
-      # #      - aws-eks/install-helm-on-cluster
-      - update-cluster:
-          cluster-name: another-eks-demo
-          aws-region: us-west-2
-          context: cdk8s
-          requires:
-            - aws-eks/install-helm-on-cluster
-      - approve-cluster-termination:
-          type: approval
-          requires:
-            - update-cluster
-      - aws-eks/delete-cluster:
-          cluster-name: another-eks-demo
-          aws-region: us-west-2
-          context: cdk8s
-          requires:
-            - approve-cluster-termination
-          #requires:
-          #  - test-cluster
-  # build-app-&-deploy-via-helm:
+  # provision-cluster:
   #   jobs:
-  #     - build
+  #     - aws-eks/create-cluster:
+  #        cluster-name: another-eks-demo
+  #        aws-region: us-west-2
+  #        context: cdk8s
+  #     - test-cluster:
+  #        cluster-name: another-eks-demo
+  #        aws-region: us-west-2
+  #        context: cdk8s
+  #        requires:
+  #          - aws-eks/create-cluster
+  #     - aws-eks/install-helm-on-cluster:
+  #        cluster-name: another-eks-demo
+  #        aws-region: us-west-2
+  #        context: cdk8s
+  #        requires:
+  #          - test-cluster
+  #     # # - aws-eks/install-helm-chart:
+  #     # #    cluster-name: another-eks-demo
+  #     # #    aws-region: us-west-2
+  #     # #    chart: helloworld-chart
+  #     # #    context: cdk8s
+  #     # #    requires:
+  #     # #      - aws-eks/install-helm-on-cluster
+  #     - update-cluster:
+  #         cluster-name: another-eks-demo
+  #         aws-region: us-west-2
+  #         context: cdk8s
+  #         requires:
+  #           - aws-eks/install-helm-on-cluster
+  #     - approve-cluster-termination:
+  #         type: approval
+  #         requires:
+  #           - update-cluster
+  #     - aws-eks/delete-cluster:
+  #         cluster-name: another-eks-demo
+  #         aws-region: us-west-2
+  #         context: cdk8s
+  #         requires:
+  #           - approve-cluster-termination
+  build-app-&-deploy-via-helm:
+    jobs:
+      - build-docker:
+          context: cdk8s
