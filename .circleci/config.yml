@@ -57,6 +57,7 @@ jobs:
             kubectl apply -f yaml/hello-kubernetes.custom-message.yaml --validate=false
   build-docker:
     machine: true
+    working_directory: ~/src
     steps:
       - checkout
       - run:
