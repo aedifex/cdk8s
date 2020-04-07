@@ -70,30 +70,30 @@ workflows:
   provision-cluster:
     jobs:
       - aws-eks/create-cluster:
-         cluster-name: e2eks
+         cluster-name: another-eks-demo
          aws-region: us-west-2
          context: cdk8s
       - test-cluster:
-         cluster-name: e2eks
+         cluster-name: another-eks-demo
          aws-region: us-west-2
          context: cdk8s
          requires:
            - aws-eks/create-cluster
       - aws-eks/install-helm-on-cluster:
-         cluster-name: e2eks
+         cluster-name: another-eks-demo
          aws-region: us-west-2
          context: cdk8s
          requires:
            - test-cluster
       # # - aws-eks/install-helm-chart:
-      # #    cluster-name: e2eks
+      # #    cluster-name: another-eks-demo
       # #    aws-region: us-west-2
       # #    chart: helloworld-chart
       # #    context: cdk8s
       # #    requires:
       # #      - aws-eks/install-helm-on-cluster
       - update-cluster:
-          cluster-name: e2eks
+          cluster-name: another-eks-demo
           aws-region: us-west-2
           context: cdk8s
           requires:
@@ -103,7 +103,7 @@ workflows:
           requires:
             - update-cluster
       - aws-eks/delete-cluster:
-          cluster-name: e2eks
+          cluster-name: another-eks-demo
           aws-region: us-west-2
           context: cdk8s
           requires:

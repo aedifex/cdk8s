@@ -13,6 +13,7 @@ app.use(morgan('combined'));
 var port = process.env.PORT || 8080;
 var message = process.env.MESSAGE || "Hello world!";
 var build_number = process.env.CIRCLE_BUILD_NUM || -1;
+var build_time = process.env.IMAGE_CREATE_DATE|| "today";
 
 app.get('/', function (req, res) {
     res.render('home', {
@@ -20,7 +21,7 @@ app.get('/', function (req, res) {
       build_number: build_number,
       platform: os.type(),
       release: os.release(),
-      hostName: os.hostname()
+      hostName: os.hostname(),build_time: build_time
     });
 });
 

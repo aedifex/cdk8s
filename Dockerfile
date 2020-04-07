@@ -4,6 +4,8 @@ ARG IMAGE_CREATE_DATE
 ARG IMAGE_VERSION
 ARG IMAGE_SOURCE_REVISION
 
+ENV IMAGE_CREATE_DATE $IMAGE_CREATE_DATE
+
 # Metadata as defined in OCI image spec annotations - https://github.com/opencontainers/image-spec/blob/master/annotations.md
 LABEL org.opencontainers.image.title="Hello Kubernetes!" \
       org.opencontainers.image.description="Provides a demo image to deploy to a Kubernetes cluster. It displays a message, the name of the pod and details of the node it is deployed to." \
@@ -15,18 +17,18 @@ LABEL org.opencontainers.image.title="Hello Kubernetes!" \
       org.opencontainers.image.vendor="Paul Bouwer" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.source="https://github.com/paulbouwer/hello-kubernetes.git" \
-      org.opencontainers.image.revision=$IMAGE_SOURCE_REVISION 
+      org.opencontainers.image.revision=$IMAGE_SOURCE_REVISION
 
 # Create app directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # Install app dependencies
-COPY app/package.json /usr/src/app/
+COPY package.json /usr/src/app/
 RUN npm install
 
 # Bundle app source
-COPY app/ /usr/src/app
+COPY . /usr/src/app
 
 USER node
 CMD [ "npm", "start" ]
