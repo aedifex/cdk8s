@@ -15,18 +15,18 @@ LABEL org.opencontainers.image.title="Hello Kubernetes!" \
       org.opencontainers.image.vendor="Paul Bouwer" \
       org.opencontainers.image.licenses="MIT" \
       org.opencontainers.image.source="https://github.com/paulbouwer/hello-kubernetes.git" \
-      org.opencontainers.image.revision=$IMAGE_SOURCE_REVISION 
+      org.opencontainers.image.revision=$IMAGE_SOURCE_REVISION
 
 # Create app directory
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # Install app dependencies
-COPY package.json /usr/src/app/
+COPY app/package.json /usr/src/app/
 RUN npm install
 
 # Bundle app source
-COPY . /usr/src/app
+COPY app/ /usr/src/app
 
 USER node
 CMD [ "npm", "start" ]
