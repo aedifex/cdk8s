@@ -237,16 +237,12 @@ workflows:
       - browser-tests:
           requires:
             - build-docker-image
-      - approve-deployment:
-          type: approval
-          requires:
-            - browser-tests
-            - run-integration-tests
-            - setup-heroku-environment
-            - build-docker-image
       - update-cluster:
            cluster-name: another-eks-demo
            aws-region: us-west-2
            context: cdk8s
            requires:
-             - approve-deployment
+            - browser-tests
+            - run-integration-tests
+            - setup-heroku-environment
+            - build-docker-image
