@@ -170,7 +170,7 @@ jobs:
     - slack/notify:
           mentions: 'chris'
           webhook: ${SLACK_WEBHOOK}
-          message: ":fullyoperational: Pipeline: $CIRCLE_WORKFLOW_ID was successful! \n$CIRCLE_BUILD_URL \nhttps://damp-bastion-21277.herokuapp.com/"
+          message: ":fullyoperational: Pipeline: $CIRCLE_WORKFLOW_ID was successful! \n$CIRCLE_BUILD_URL \nhttp://a2d5fec0d3c164bbc92d428fdbd01d5e-1667835882.us-west-2.elb.amazonaws.com/"
 
 workflows:
   # provision-cluster:
