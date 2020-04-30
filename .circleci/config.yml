@@ -240,7 +240,7 @@ workflows:
       - update-cluster:
            cluster-name: another-eks-demo
            aws-region: us-west-2
-           context: eks-staging
+           context: cdk8s
            requires:
             - browser-tests
             - run-integration-tests
