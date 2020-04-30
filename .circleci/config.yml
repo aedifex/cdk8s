@@ -1,6 +1,7 @@
 orbs:
   aws-eks: circleci/aws-eks@0.2.3
   kubernetes: circleci/kubernetes@0.4.0
+  slack: circleci/slack@2.0.0
 version: 2.1
 
 jobs:
@@ -55,6 +56,11 @@ jobs:
             cat yaml/hello-kubernetes.custom-message.tmpl | \
             envsubst > yaml/hello-kubernetes.custom-message.yaml && \
             kubectl apply -f yaml/hello-kubernetes.custom-message.yaml --validate=false
+      - slack/notify:
+          mentions: 'chris'
+          webhook: ${SLACK_WEBHOOK}
+          message: ":fullyoperational: Pipeline: $CIRCLE_WORKFLOW_ID was successful! \n$CIRCLE_BUILD_URL \nhttps://damp-bastion-21277.herokuapp.com/"
+  
   build-docker:
     machine: true
     working_directory: ~/src
@@ -69,50 +75,186 @@ jobs:
       - run:
           name: Docker Login
           command: docker login -u $DOCKER_USER -p $DOCKER_PASS
+  # "Dummy" job declarations
+  setup-heroku-environment:
+    working_directory: ~/project
+    machine: true
+    steps:
+    - run:
+        name: Provision Heroku Dyno
+        command: echo "Setting up dyno"
+
+  build-node-app:
+    working_directory: ~/project
+    docker:
+    - image: circleci/node:10.16.3
+    steps:
+    - run:
+        name: Update NPM
+        command: echo "Update NPM"
+  
+  code-linting:
+    working_directory: ~/project
+    docker:
+    - image: circleci/node:10.16.3
+    steps:
+    - checkout
+  
+  code-coverage:
+    working_directory: ~/project
+    docker:
+    - image: circleci/node:10.16.3
+    steps:
+    - checkout
+  
+  vulnerability-scans:
+    working_directory: ~/project
+    docker:
+    - image: circleci/node:10.16.3
+    steps:
+    - checkout
+
+  build-docker-image:
+    working_directory: ~/project
+    docker:
+    - image: circleci/node:10.16.3
+    steps:
+    - checkout  
+  
+  run-integration-tests:
+    working_directory: ~/project
+    machine: true
+    steps:
+    - checkout
+  
+  browser-tests:
+    working_directory: ~/project
+    docker:
+    - image: circleci/node:10.16.3
+    steps:
+    - checkout
+
+  deploy-application:
+    working_directory: ~/project
+    docker:
+    - image: circleci/node:10.16.3
+    resource_class: small
+    steps:
+    - setup_remote_docker
+    - checkout
+    - attach_workspace:
+          at: ~/project
+    - run:
+        name: Provision Heroku Dyno
+        command: echo "Deploying appication"
+    - run:
+        name: setup heroku cli
+        command: |
+          chmod +x scripts/setup_herokucli.sh && scripts/setup_herokucli.sh
+    - run:
+        name: Update NPM
+        command: 'sudo npm install -g npm@latest'
+    - run:
+        name: Fetch dependencies
+        command: npm install
+    - run:
+        name: Load Docker image from tar file
+        command: docker load --input image.tar
+    - run:
+        name: Build and Tag Docker Image
+        command: |
+          docker push registry.heroku.com/damp-bastion-21277/web:${CIRCLE_SHA1}
+    - run:
+        name: Deploy Application
+        command: chmod +x scripts/deploy.sh && scripts/deploy.sh
+    - slack/notify:
+          mentions: 'chris'
+          webhook: ${SLACK_WEBHOOK}
+          message: ":fullyoperational: Pipeline: $CIRCLE_WORKFLOW_ID was successful! \n$CIRCLE_BUILD_URL \nhttps://damp-bastion-21277.herokuapp.com/"
 
 workflows:
-  provision-cluster:
+  # provision-cluster:
+  #   jobs:
+  #     - aws-eks/create-cluster:
+  #        cluster-name: another-eks-demo
+  #        aws-region: us-west-2
+  #        context: cdk8s
+  #     - test-cluster:
+  #        cluster-name: another-eks-demo
+  #        aws-region: us-west-2
+  #        context: cdk8s
+  #        requires:
+  #          - aws-eks/create-cluster
+  #     #- aws-eks/install-helm-on-cluster:
+  #     #   cluster-name: another-eks-demo
+  #     #   aws-region: us-west-2
+  #     #   context: cdk8s
+  #     #   requires:
+  #     #     - test-cluster
+  #     # # - aws-eks/install-helm-chart:
+  #     # #    cluster-name: another-eks-demo
+  #     # #    aws-region: us-west-2
+  #     # #    chart: helloworld-chart
+  #     # #    context: cdk8s
+  #     # #    requires:
+  #     # #      - aws-eks/install-helm-on-cluster
+  #     - update-cluster:
+  #         cluster-name: another-eks-demo
+  #         aws-region: us-west-2
+  #         context: cdk8s
+  #         requires:
+  #           - test-cluster
+  #     # - approve-cluster-termination:
+  #     #     type: approval
+  #     #     requires:
+  #     #       - update-cluster
+  #     # - aws-eks/delete-cluster:
+  #     #     cluster-name: another-eks-demo
+  #     #     aws-region: us-west-2
+  #     #     context: cdk8s
+  #     #     requires:
+  #     #       - approve-cluster-termination
+  build-test-&-deploy:
     jobs:
-      - aws-eks/create-cluster:
-         cluster-name: another-eks-demo
-         aws-region: us-west-2
-         context: cdk8s
-      - test-cluster:
-         cluster-name: another-eks-demo
-         aws-region: us-west-2
-         context: cdk8s
-         requires:
-           - aws-eks/create-cluster
-      #- aws-eks/install-helm-on-cluster:
-      #   cluster-name: another-eks-demo
-      #   aws-region: us-west-2
-      #   context: cdk8s
-      #   requires:
-      #     - test-cluster
-      # # - aws-eks/install-helm-chart:
-      # #    cluster-name: another-eks-demo
-      # #    aws-region: us-west-2
-      # #    chart: helloworld-chart
-      # #    context: cdk8s
-      # #    requires:
-      # #      - aws-eks/install-helm-on-cluster
-      - update-cluster:
-          cluster-name: another-eks-demo
-          aws-region: us-west-2
-          context: cdk8s
+      - build-node-app
+      - setup-heroku-environment:
+          filters:
+            branches:
+              only:
+                - master
+      - code-linting:
           requires:
-            - test-cluster
-      # - approve-cluster-termination:
-      #     type: approval
-      #     requires:
-      #       - update-cluster
-      # - aws-eks/delete-cluster:
-      #     cluster-name: another-eks-demo
-      #     aws-region: us-west-2
-      #     context: cdk8s
-      #     requires:
-      #       - approve-cluster-termination
-  build-app-&-deploy-via-helm:
-    jobs:
-      - build-docker:
-          context: cdk8s
+            - build-node-app
+      - code-coverage:
+          requires:
+            - build-node-app
+      - vulnerability-scans:
+          requires:
+            - build-node-app
+      - build-docker-image:
+          requires:
+            - code-coverage
+            - vulnerability-scans
+      - run-integration-tests:
+          requires:
+            - build-docker-image
+      - browser-tests:
+          requires:
+            - build-docker-image
+      - approve-deployment:
+          type: approval
+          requires:
+            - browser-tests
+            - run-integration-tests
+            - setup-heroku-environment
+            - build-docker-image
+          filters:
+            branches:
+              only:
+                - master
+      - update-cluster:
+           cluster-name: another-eks-demo
+           aws-region: us-west-2
+           context: cdk8s
+           requires:
+             - approve-deployment
