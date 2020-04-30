@@ -217,7 +217,7 @@ workflows:
   build-test-&-deploy:
     jobs:
       - build-node-app
-      - setup-heroku-environment:
+      - setup-heroku-environment
       - code-linting:
           requires:
             - build-node-app
