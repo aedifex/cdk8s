@@ -6,7 +6,7 @@ spec:
   type: LoadBalancer
   ports:
   - port: 80
-    targetPort: 8080
+    targetPort: 3000
   selector:
     app: hello-kubernetes-custom
 ---
@@ -26,9 +26,11 @@ spec:
     spec:
       containers:
       - name: hello-kubernetes
-        image: paulbouwer/hello-kubernetes:1.7
+        image: chriscircleci/hello-kubernetes:tmm
         ports:
-        - containerPort: 8080
+        - containerPort: 3000
         env:
         - name: MESSAGE
           value: "CircleCI Build Num: $CIRCLE_BUILD_NUM"
+        - name: PORT
+          value: "3000"
