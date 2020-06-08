@@ -190,17 +190,18 @@ workflows:
           aws-region: us-west-2
           context: cdk8s
           requires:
-            - test-cluster
+            - aws-eks/create-cluster
       - hold-update:
           type: approval
           requires:
             - aws-eks/install-helm-on-cluster
+            - test-cluster
       - update-cluster:
           cluster-name: another-eks-demo
           aws-region: us-west-2
           context: cdk8s
           requires:
-            - test-cluster
+            - hold-update
       - hold:
           type: approval
           requires:
