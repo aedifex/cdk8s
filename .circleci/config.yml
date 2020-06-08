@@ -175,46 +175,44 @@ jobs:
 workflows:
   provision-cluster:
     jobs:
+      - aws-eks/create-cluster:
+          cluster-name: another-eks-demo
+          aws-region: us-west-2
+          context: cdk8s
+      - test-cluster:
+          cluster-name: another-eks-demo
+          aws-region: us-west-2
+          context: cdk8s
+          requires:
+            - aws-eks/create-cluster
+      - aws-eks/install-helm-on-cluster:
+          cluster-name: another-eks-demo
+          aws-region: us-west-2
+          context: cdk8s
+          requires:
+            - test-cluster
+      - hold-update:
+          type: approval
+          requires:
+            - aws-eks/install-helm-on-cluster
+      - update-cluster:
+          cluster-name: another-eks-demo
+          aws-region: us-west-2
+          context: cdk8s
+          requires:
+            - test-cluster
+      - hold:
+          type: approval
+          requires:
+            - update-cluster
       - aws-eks/delete-cluster:
           cluster-name: another-eks-demo
           aws-region: us-west-2
           context: cdk8s
-  #     - aws-eks/create-cluster:
-  #        cluster-name: another-eks-demo
-  #        aws-region: us-west-2
-  #        context: cdk8s
-  #     - test-cluster:
-  #        cluster-name: another-eks-demo
-  #        aws-region: us-west-2
-  #        context: cdk8s
-  #        requires:
-  #          - aws-eks/create-cluster
-  #     #- aws-eks/install-helm-on-cluster:
-  #     #   cluster-name: another-eks-demo
-  #     #   aws-region: us-west-2
-  #     #   context: cdk8s
-  #     #   requires:
-  #     #     - test-cluster
-  #     # # - aws-eks/install-helm-chart:
-  #     # #    cluster-name: another-eks-demo
-  #     # #    aws-region: us-west-2
-  #     # #    chart: helloworld-chart
-  #     # #    context: cdk8s
-  #     # #    requires:
-  #     # #      - aws-eks/install-helm-on-cluster
-  #     - update-cluster:
-  #         cluster-name: another-eks-demo
-  #         aws-region: us-west-2
-  #         context: cdk8s
-  #         requires:
-  #           - test-cluster
-  #     # - approve-cluster-termination:
-  #     #     type: approval
-  #     #     requires:
-  #     #       - update-cluster
-      
-  #     #     requires:
-  #     #       - approve-cluster-termination
+          requires:
+            - hold
+  
+
   # build-test-&-deploy:
   #   jobs:
   #     - build-node-app
