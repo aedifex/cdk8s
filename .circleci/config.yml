@@ -191,27 +191,27 @@ workflows:
           context: cdk8s
           requires:
             - aws-eks/create-cluster
-      - hold-update:
-          type: approval
-          requires:
-            - aws-eks/install-helm-on-cluster
-            - test-cluster
+      # - hold-update:
+      #     type: approval
+      #     requires:
+      #       - aws-eks/install-helm-on-cluster
+      #       - test-cluster
       - update-cluster:
           cluster-name: another-eks-demo
           aws-region: us-west-2
           context: cdk8s
           requires:
-            - hold-update
-      - hold:
-          type: approval
-          requires:
-            - update-cluster
+            - aws-eks/install-helm-on-cluster
+      # - hold:
+      #     type: approval
+      #     requires:
+      #       - update-cluster
       - aws-eks/delete-cluster:
           cluster-name: another-eks-demo
           aws-region: us-west-2
           context: cdk8s
           requires:
-            - hold
+            - update-cluster
   
 
   # build-test-&-deploy:
