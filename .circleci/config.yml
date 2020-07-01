@@ -86,6 +86,8 @@ jobs:
             kubectl get services
       - helm-orb/install-helm-client
       - helm-orb/install-helm-on-cluster
+      - helm-orb/install-helm-chart:
+          value-files: ~/foo
   
 
 workflows:
