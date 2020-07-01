@@ -61,116 +61,6 @@ jobs:
           webhook: ${SLACK_WEBHOOK}
           message: ":fullyoperational: Pipeline: $CIRCLE_WORKFLOW_ID was successful! \n$CIRCLE_BUILD_URL \nhttps://damp-bastion-21277.herokuapp.com/"
   
-  build-docker:
-    machine: true
-    working_directory: ~/src
-    steps:
-      - checkout
-      - run:
-          name: Build Image
-          command: |
-            docker build --no-cache --build-arg IMAGE_CREATE_DATE="`date`" -t "chriscircleci/hello-kubernetes:blackops" .
-            # docker build .
-            # docker images
-      - run:
-          name: Docker Login
-          command: docker login -u $DOCKER_USER -p $DOCKER_PASS
-  # "Dummy" job declarations
-  setup-heroku-environment:
-    working_directory: ~/project
-    machine: true
-    steps:
-    - run:
-        name: Provision Heroku Dyno
-        command: echo "Setting up dyno"
-
-  build-node-app:
-    working_directory: ~/project
-    docker:
-    - image: circleci/node:10.16.3
-    steps:
-    - run:
-        name: Update NPM
-        command: echo "Update NPM"
-  
-  code-linting:
-    working_directory: ~/project
-    docker:
-    - image: circleci/node:10.16.3
-    steps:
-    - checkout
-  
-  code-coverage:
-    working_directory: ~/project
-    docker:
-    - image: circleci/node:10.16.3
-    steps:
-    - checkout
-  
-  vulnerability-scans:
-    working_directory: ~/project
-    docker:
-    - image: circleci/node:10.16.3
-    steps:
-    - checkout
-
-  build-docker-image:
-    working_directory: ~/project
-    docker:
-    - image: circleci/node:10.16.3
-    steps:
-    - checkout  
-  
-  run-integration-tests:
-    working_directory: ~/project
-    machine: true
-    steps:
-    - checkout
-  
-  browser-tests:
-    working_directory: ~/project
-    docker:
-    - image: circleci/node:10.16.3
-    steps:
-    - checkout
-
-  deploy-application:
-    working_directory: ~/project
-    docker:
-    - image: circleci/node:10.16.3
-    resource_class: small
-    steps:
-    - setup_remote_docker
-    - checkout
-    - attach_workspace:
-          at: ~/project
-    - run:
-        name: Provision Heroku Dyno
-        command: echo "Deploying appication"
-    - run:
-        name: setup heroku cli
-        command: |
-          chmod +x scripts/setup_herokucli.sh && scripts/setup_herokucli.sh
-    - run:
-        name: Update NPM
-        command: 'sudo npm install -g npm@latest'
-    - run:
-        name: Fetch dependencies
-        command: npm install
-    - run:
-        name: Load Docker image from tar file
-        command: docker load --input image.tar
-    - run:
-        name: Build and Tag Docker Image
-        command: |
-          docker push registry.heroku.com/damp-bastion-21277/web:${CIRCLE_SHA1}
-    - run:
-        name: Deploy Application
-        command: chmod +x scripts/deploy.sh && scripts/deploy.sh
-    - slack/notify:
-          mentions: 'chris'
-          webhook: ${SLACK_WEBHOOK}
-          message: ":fullyoperational: Pipeline: $CIRCLE_WORKFLOW_ID was successful! \n$CIRCLE_BUILD_URL \nhttp://a2d5fec0d3c164bbc92d428fdbd01d5e-1667835882.us-west-2.elb.amazonaws.com/"
 
 workflows:
   provision-cluster:
@@ -191,27 +81,18 @@ workflows:
           context: cdk8s
           requires:
             - aws-eks/create-cluster
-      # - hold-update:
-      #     type: approval
-      #     requires:
-      #       - aws-eks/install-helm-on-cluster
-      #       - test-cluster
       - update-cluster:
           cluster-name: another-eks-demo
           aws-region: us-west-2
           context: cdk8s
           requires:
-            - aws-eks/install-helm-on-cluster
-      # - hold:
-      #     type: approval
+            - aws-eks/install-helm-on-cluster 
+      # - aws-eks/delete-cluster:
+      #     cluster-name: another-eks-demo
+      #     aws-region: us-west-2
+      #     context: cdk8s
       #     requires:
       #       - update-cluster
-      - aws-eks/delete-cluster:
-          cluster-name: another-eks-demo
-          aws-region: us-west-2
-          context: cdk8s
-          requires:
-            - update-cluster
   
 
   # build-test-&-deploy:
