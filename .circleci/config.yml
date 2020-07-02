@@ -87,8 +87,8 @@ jobs:
       - helm-orb/install-helm-client
       - helm-orb/install-helm-on-cluster
       - helm-orb/install-helm-chart:
-          chart: ./chart/hello/
-          value-files: ./chart/hello/
+          chart: ./chart/hello/Chart.yaml
+          value-files: ./chart/hello/values.yaml
   
 
 workflows:
