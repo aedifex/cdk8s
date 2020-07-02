@@ -87,8 +87,8 @@ jobs:
       - helm-orb/install-helm-client
       - helm-orb/install-helm-on-cluster
       - helm-orb/install-helm-chart:
-          chart: ~/foo
-          value-files: ~/foo
+          chart: ./chart
+          value-files: ./chart
   
 
 workflows:
