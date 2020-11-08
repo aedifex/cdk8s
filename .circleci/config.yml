@@ -54,8 +54,6 @@ jobs:
       - run:
           name: Update Cluster
           command: |
-            cat yaml/hello-kubernetes.custom-message.tmpl | \
-            envsubst > yaml/hello-kubernetes.custom-message.yaml && \
             kubectl apply -f yaml/hello-kubernetes.custom-message.yaml --validate=false
       - slack/notify:
           mentions: 'chris'
@@ -94,32 +92,32 @@ jobs:
 workflows:
   provision-cluster:
     jobs:
-      # - aws-eks/create-cluster:
-      #     cluster-name: another-eks-demo
-      #     aws-region: us-west-2
-      #     context: cdk8s
-      # - test-cluster:
-      #     cluster-name: another-eks-demo
-      #     aws-region: us-west-2
-      #     context: cdk8s
-      #     requires:
-      #       - aws-eks/create-cluster
-      # - aws-eks/install-helm-on-cluster:
-      #     cluster-name: another-eks-demo
-      #     aws-region: us-west-2
-      #     context: cdk8s
-      #     requires:
-      #       - aws-eks/create-cluster
+      - aws-eks/create-cluster:
+          cluster-name: another-eks-demo
+          aws-region: us-west-2
+          context: cdk8s
+      - test-cluster:
+          cluster-name: another-eks-demo
+          aws-region: us-west-2
+          context: cdk8s
+          requires:
+            - aws-eks/create-cluster
+      - aws-eks/install-helm-on-cluster:
+          cluster-name: another-eks-demo
+          aws-region: us-west-2
+          context: cdk8s
+          requires:
+            - aws-eks/create-cluster
       # - update-cluster:
       #     cluster-name: another-eks-demo
       #     aws-region: us-west-2
       #     context: cdk8s
       #     requires:
       #       - aws-eks/install-helm-on-cluster
-      - aws-eks/delete-cluster:
-          cluster-name: another-eks-demo
-          aws-region: us-west-2
-          context: cdk8s
+      # - aws-eks/delete-cluster:
+      #     cluster-name: another-eks-demo
+      #     aws-region: us-west-2
+      #     context: cdk8s
           #requires:
           #  - update-cluster
   # helm-workflow:
