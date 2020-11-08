@@ -120,8 +120,8 @@ workflows:
           cluster-name: another-eks-demo
           aws-region: us-west-2
           context: cdk8s
-          requires:
-            - update-cluster
+          #requires:
+          #  - update-cluster
   # helm-workflow:
   #   jobs:
   #     - helm-lifecycle:
