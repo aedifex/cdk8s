@@ -94,34 +94,34 @@ jobs:
 workflows:
   provision-cluster:
     jobs:
-      - aws-eks/create-cluster:
-          cluster-name: another-eks-demo
-          aws-region: us-west-2
-          context: cdk8s
-      - test-cluster:
-          cluster-name: another-eks-demo
-          aws-region: us-west-2
-          context: cdk8s
-          requires:
-            - aws-eks/create-cluster
-      - aws-eks/install-helm-on-cluster:
-          cluster-name: another-eks-demo
-          aws-region: us-west-2
-          context: cdk8s
-          requires:
-            - aws-eks/create-cluster
-      - update-cluster:
-          cluster-name: another-eks-demo
-          aws-region: us-west-2
-          context: cdk8s
-          requires:
-            - aws-eks/install-helm-on-cluster 
-      # - aws-eks/delete-cluster:
+      # - aws-eks/create-cluster:
+      #     cluster-name: another-eks-demo
+      #     aws-region: us-west-2
+      #     context: cdk8s
+      # - test-cluster:
       #     cluster-name: another-eks-demo
       #     aws-region: us-west-2
       #     context: cdk8s
       #     requires:
-      #       - update-cluster
+      #       - aws-eks/create-cluster
+      # - aws-eks/install-helm-on-cluster:
+      #     cluster-name: another-eks-demo
+      #     aws-region: us-west-2
+      #     context: cdk8s
+      #     requires:
+      #       - aws-eks/create-cluster
+      # - update-cluster:
+      #     cluster-name: another-eks-demo
+      #     aws-region: us-west-2
+      #     context: cdk8s
+      #     requires:
+      #       - aws-eks/install-helm-on-cluster
+      - aws-eks/delete-cluster:
+          cluster-name: another-eks-demo
+          aws-region: us-west-2
+          context: cdk8s
+          requires:
+            - update-cluster
   # helm-workflow:
   #   jobs:
   #     - helm-lifecycle:
