@@ -1,5 +1,5 @@
 orbs:
-  aws-eks: circleci/aws-eks@0.2.3
+  aws-eks: circleci/aws-eks@2.1.1
   kubernetes: circleci/kubernetes@0.4.0
   slack: circleci/slack@2.0.0
   helm-orb: externalreality/helm-orb@0.0.1
@@ -93,33 +93,33 @@ workflows:
   provision-cluster:
     jobs:
       - aws-eks/create-cluster:
-          cluster-name: another-eks-demo
+          cluster-name: aedifex-eks-demo
           aws-region: us-west-2
-          context: cdk8s
-      - test-cluster:
-          cluster-name: another-eks-demo
-          aws-region: us-west-2
-          context: cdk8s
-          requires:
-            - aws-eks/create-cluster
-      - aws-eks/install-helm-on-cluster:
-          cluster-name: another-eks-demo
-          aws-region: us-west-2
-          context: cdk8s
-          requires:
-            - aws-eks/create-cluster
+          #context: cdk8s
+      # - test-cluster:
+      #     cluster-name: another-eks-demo
+      #     aws-region: us-west-2
+      #     context: cdk8s
+      #     requires:
+      #       - aws-eks/create-cluster
+      # - aws-eks/install-helm-on-cluster:
+      #     cluster-name: another-eks-demo
+      #     aws-region: us-west-2
+      #     #context: cdk8s
+      #     requires:
+      #       - aws-eks/create-cluster
       # - update-cluster:
       #     cluster-name: another-eks-demo
       #     aws-region: us-west-2
       #     context: cdk8s
       #     requires:
       #       - aws-eks/install-helm-on-cluster
-      # - aws-eks/delete-cluster:
-      #     cluster-name: another-eks-demo
-      #     aws-region: us-west-2
-      #     context: cdk8s
-          #requires:
-          #  - update-cluster
+      - aws-eks/delete-cluster:
+          cluster-name: another-eks-demo
+          aws-region: us-west-2
+          #context: cdk8s
+          requires:
+           - aws-eks/create-cluster
   # helm-workflow:
   #   jobs:
   #     - helm-lifecycle:
