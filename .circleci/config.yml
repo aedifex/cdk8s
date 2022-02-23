@@ -118,8 +118,8 @@ workflows:
           cluster-name: aedifex-eks-demo
           aws-region: us-west-1
           #context: cdk8s
-          requires:
-           - aws-eks/create-cluster
+          # requires:
+          #  - aws-eks/create-cluster
   # helm-workflow:
   #   jobs:
   #     - helm-lifecycle:
