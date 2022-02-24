@@ -92,9 +92,9 @@ jobs:
 workflows:
   provision-cluster:
     jobs:
-      # - aws-eks/create-cluster:
-      #     cluster-name: aedifex-eks-demo
-      #     aws-region: us-west-1
+      - aws-eks/create-cluster:
+          cluster-name: aedifex-eks-demo
+          aws-region: us-west-1
           #context: cdk8s
       # - test-cluster:
       #     cluster-name: another-eks-demo
@@ -114,9 +114,9 @@ workflows:
       #     context: cdk8s
       #     requires:
       #       - aws-eks/install-helm-on-cluster
-      - aws-eks/delete-cluster:
-          cluster-name: aedifex-eks-demo
-          aws-region: us-west-1
+      # - aws-eks/delete-cluster:
+      #     cluster-name: aedifex-eks-demo
+      #     aws-region: us-west-1
           #context: cdk8s
           # requires:
           #  - aws-eks/create-cluster
