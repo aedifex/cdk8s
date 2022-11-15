@@ -1,5 +1,5 @@
 orbs:
-  aws-eks: circleci/aws-eks@2.1.1
+  aws-eks: circleci/aws-eks@2.2.0
   kubernetes: circleci/kubernetes@0.4.0
   slack: circleci/slack@2.0.0
   helm-orb: externalreality/helm-orb@0.0.1
