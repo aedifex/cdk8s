@@ -7,7 +7,7 @@ version: 2.1
 
 jobs:
   test-cluster:
-    executor: aws-eks/python3
+    executor: cimg/python:3.10-browsers
     parameters:
       cluster-name:
         description: |
