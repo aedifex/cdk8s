@@ -7,7 +7,7 @@ version: 2.1
 
 jobs:
   test-cluster:
-    executor: cimg/python:3.10-browsers
+    executor: cimg/python:3.11.0
     parameters:
       cluster-name:
         description: |
