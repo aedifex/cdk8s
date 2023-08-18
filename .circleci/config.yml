@@ -103,11 +103,11 @@ workflows:
           # context: cdk8s
       #     requires:
       #       - aws-eks/create-cluster
-      - aws-eks/install-helm-on-cluster:
-          cluster-name: aedifex-eks-test-demo
-          aws-region: us-west-1
-          requires:
-            - aws-eks/create-cluster
+      # - aws-eks/install-helm-on-cluster:
+      #     cluster-name: aedifex-eks-test-demo
+      #     aws-region: us-west-1
+      #     requires:
+      #       - aws-eks/create-cluster
       # - update-cluster:
       #     cluster-name: another-eks-demo
       #     aws-region: us-west-2
@@ -118,4 +118,4 @@ workflows:
           cluster-name: aedifex-eks-test-demo
           aws-region: us-west-1
           requires:
-           - aws-eks/install-helm-on-cluster
+           - aws-eks/create-cluster
