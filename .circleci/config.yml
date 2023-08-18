@@ -96,7 +96,7 @@ workflows:
     jobs:
       - aws-eks/create-cluster:
           cluster-name: aedifex-eks-test-demo
-          aws-region: us-west-1
+          aws-region: us-west-2
       # - test-cluster:
       #     cluster-name: aedifex-eks-demo
       #     aws-region: us-west-1
@@ -116,6 +116,6 @@ workflows:
       #       - aws-eks/install-helm-on-cluster
       - aws-eks/delete-cluster:
           cluster-name: aedifex-eks-test-demo
-          aws-region: us-west-1
+          aws-region: us-west-2
           requires:
            - aws-eks/create-cluster
