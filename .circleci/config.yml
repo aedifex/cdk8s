@@ -123,6 +123,6 @@ workflows:
   update-awseks-cluster:
     jobs:
       - update-cluster:
-          cluster-name: another-eks-demo
+          cluster-name: aedifex-eks-demo
           aws-region: us-west-1
           context: cdk8s
