@@ -125,4 +125,4 @@ workflows:
       - update-cluster:
           cluster-name: aedifex-eks-demo
           aws-region: us-west-1
-          context: cdk8s
+          # context: cdk8s
