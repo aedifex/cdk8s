@@ -124,5 +124,5 @@ workflows:
     jobs:
       - update-cluster:
           cluster-name: another-eks-demo
-          aws-region: us-west-2
+          aws-region: us-west-1
           context: cdk8s
