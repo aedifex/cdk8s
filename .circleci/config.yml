@@ -93,36 +93,41 @@ jobs:
   
 
 workflows:
-  # provision-awseks-cluster:
-  #   jobs:
-  #     - aws-eks/create-cluster:
-  #         cluster-name: aedifex-eks-test-demo
-  #         aws-region: us-west-2
-  #     # - test-cluster:
-  #     #     cluster-name: aedifex-eks-demo
-  #     #     aws-region: us-west-1
-  #         # context: cdk8s
-  #     #     requires:
-  #     #       - aws-eks/create-cluster
-  #     # - aws-eks/install-helm-on-cluster:
-  #     #     cluster-name: aedifex-eks-test-demo
-  #     #     aws-region: us-west-1
-  #     #     requires:
-  #     #       - aws-eks/create-cluster
-  #     # - update-cluster:
-  #     #     cluster-name: another-eks-demo
-  #     #     aws-region: us-west-2
-  #     #     context: cdk8s
-  #     #     requires:
-  #     #       - aws-eks/install-helm-on-cluster
-  #     - aws-eks/delete-cluster:
-  #         cluster-name: aedifex-eks-test-demo
-  #         aws-region: us-west-2
-  #         requires:
-  #          - aws-eks/create-cluster
-  update-awseks-cluster:
+  provision-awseks-cluster:
     jobs:
-      - update-cluster:
-          cluster-name: aedifex-eks-demo
-          aws-region: us-west-1
-          # context: cdk8s
+      - aws-eks/create-cluster:
+          cluster-name: eks-immersion-demo
+          aws-region: us-west-2
+      - test-cluster:
+          cluster-name: eks-immersion-demo
+          aws-region: us-west-2
+          #context: cdk8s
+          requires:
+            - aws-eks/create-cluster
+      - aws-eks/delete-cluster:
+          cluster-name: eks-immersion-demo
+          aws-region: us-west-2
+          requires:
+            - test-cluster
+      # - aws-eks/install-helm-on-cluster:
+      #     cluster-name: eks-immersion-demo
+      #     aws-region: us-west-2
+      #     requires:
+      #       - aws-eks/create-cluster
+      # - update-cluster:
+      #     cluster-name: another-eks-demo
+      #     aws-region: us-west-2
+      #     context: cdk8s
+      #     requires:
+      #       - aws-eks/install-helm-on-cluster
+      # - aws-eks/delete-cluster:
+      #     cluster-name: aedifex-eks-test-demo
+      #     aws-region: us-west-2
+      #     requires:
+      #      - aws-eks/create-cluster
+  # update-awseks-cluster:
+  #   jobs:
+  #     - update-cluster:
+  #         cluster-name: aedifex-eks-demo
+  #         aws-region: us-west-1
+  #         # context: cdk8s
