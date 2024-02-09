@@ -9,6 +9,9 @@ parameters:
   eks-cluster-name:
     type: string
     default: "eks-immersion-day"
+  vpc-id:
+    type: string
+    default: "vpc-084aeb8291ab9d042"
 
 jobs:
   test-cluster:
@@ -102,18 +105,22 @@ workflows:
     jobs:
       - aws-eks/create-cluster:
           cluster-name: << pipeline.parameters.eks-cluster-name >>
+          vpc-id: << pipeline.parameters.vpc-id >>
           aws-region: us-west-2
       - test-cluster:
           cluster-name: << pipeline.parameters.eks-cluster-name >>
           aws-region: us-west-2
+          vpc-id: << pipeline.parameters.vpc-id >>
           #context: cdk8s
           requires:
             - aws-eks/create-cluster
       - aws-eks/delete-cluster:
           cluster-name: << pipeline.parameters.eks-cluster-name >>
           aws-region: us-west-2
+          vpc-id: << pipeline.parameters.vpc-id >>
           requires:
             - test-cluster
+
       # - aws-eks/install-helm-on-cluster:
       #     cluster-name: eks-immersion-demo
       #     aws-region: us-west-2
