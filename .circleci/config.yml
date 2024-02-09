@@ -103,20 +103,20 @@ jobs:
 workflows:
   provision-awseks-cluster:
     jobs:
-      - aws-eks/create-cluster:
-          cluster-name: << pipeline.parameters.eks-cluster-name >>
-          aws-region: us-west-1
-      - test-cluster:
-          cluster-name: << pipeline.parameters.eks-cluster-name >>
-          aws-region: us-west-1
-          #context: cdk8s
-          requires:
-            - aws-eks/create-cluster
+      # - aws-eks/create-cluster:
+      #     cluster-name: << pipeline.parameters.eks-cluster-name >>
+      #     aws-region: us-west-1
+      # - test-cluster:
+      #     cluster-name: << pipeline.parameters.eks-cluster-name >>
+      #     aws-region: us-west-1
+      #     #context: cdk8s
+      #     requires:
+      #       - aws-eks/create-cluster
       - aws-eks/delete-cluster:
           cluster-name: << pipeline.parameters.eks-cluster-name >>
           aws-region: us-west-1
-          requires:
-            - test-cluster
+  #        requires:
+  #          - test-cluster
 
       # - aws-eks/install-helm-on-cluster:
       #     cluster-name: eks-immersion-demo
