@@ -101,16 +101,16 @@ workflows:
   provision-awseks-cluster:
     jobs:
       - aws-eks/create-cluster:
-          cluster-name: << parameters.cluster-name >>
+          cluster-name: << pipeline.parameters.eks-cluster-name >>
           aws-region: us-west-2
       - test-cluster:
-          cluster-name: << parameters.cluster-name >>
+          cluster-name: << pipeline.parameters.eks-cluster-name >>
           aws-region: us-west-2
           #context: cdk8s
           requires:
             - aws-eks/create-cluster
       - aws-eks/delete-cluster:
-          cluster-name: << parameters.cluster-name >>
+          cluster-name: << pipeline.parameters.eks-cluster-name >>
           aws-region: us-west-2
           requires:
             - test-cluster
