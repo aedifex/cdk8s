@@ -105,19 +105,16 @@ workflows:
     jobs:
       - aws-eks/create-cluster:
           cluster-name: << pipeline.parameters.eks-cluster-name >>
-          vpc-id: << pipeline.parameters.vpc-id >>
-          aws-region: us-west-2
+          aws-region: us-west-1
       - test-cluster:
           cluster-name: << pipeline.parameters.eks-cluster-name >>
-          aws-region: us-west-2
-          vpc-id: << pipeline.parameters.vpc-id >>
+          aws-region: us-west-1
           #context: cdk8s
           requires:
             - aws-eks/create-cluster
       - aws-eks/delete-cluster:
           cluster-name: << pipeline.parameters.eks-cluster-name >>
-          aws-region: us-west-2
-          vpc-id: << pipeline.parameters.vpc-id >>
+          aws-region: us-west-1
           requires:
             - test-cluster
 
