@@ -8,7 +8,7 @@ version: 2.1
 parameters:
   eks-cluster-name:
     type: string
-    default: "eks-immersion-day"
+    default: "aedifex-audit-logs-sandbox"
   vpc-id:
     type: string
     default: "vpc-084aeb8291ab9d042"
@@ -103,15 +103,15 @@ jobs:
 workflows:
   provision-awseks-cluster:
     jobs:
-      # - aws-eks/create-cluster:
-      #     cluster-name: << pipeline.parameters.eks-cluster-name >>
-      #     aws-region: us-west-1
-      # - test-cluster:
-      #     cluster-name: << pipeline.parameters.eks-cluster-name >>
-      #     aws-region: us-west-1
-      #     #context: cdk8s
-      #     requires:
-      #       - aws-eks/create-cluster
+      - aws-eks/create-cluster:
+          cluster-name: << pipeline.parameters.eks-cluster-name >>
+          aws-region: us-west-1
+      - test-cluster:
+          cluster-name: << pipeline.parameters.eks-cluster-name >>
+          aws-region: us-west-1
+          #context: cdk8s
+          requires:
+            - aws-eks/create-cluster
       - aws-eks/delete-cluster:
           cluster-name: << pipeline.parameters.eks-cluster-name >>
           aws-region: us-west-1
