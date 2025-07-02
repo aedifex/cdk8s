@@ -32,6 +32,6 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 8000
-    env:
-      - name: DEPLOY_MESSAGE
-        value: "hello world"
+          env:
+            - name: DEPLOY_MESSAGE
+              value: "hello world"
