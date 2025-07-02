@@ -17,7 +17,7 @@ import (
 )
 
 // These values will be used to version the binary.
-var CommitSHA, deployed_by, git_branch, build_time, build_id string
+var CommitSHA, deployed_by, git_branch, build_time, build_id, deploy_message string
 
 // Takes an element, returns an array of bytes in JSON format.
 func jsonIfy(element interface{}) ([]byte, error) {
@@ -73,13 +73,14 @@ func getEnv(key, fallback string) string {
 // Returns binary version in the form of SHA1 && compile time.
 func version(w http.ResponseWriter, r *http.Request) {
 	version := map[string]string{
-		"version":     build_id,
-		"build":       getEnv("BUILD_ID", "local-build"),
-		"commit":      CommitSHA,
-		"branch":      git_branch,
-		"build_time":  build_time,
-		"deployed_by": deployed_by,
-		"env":         getEnv("DEPLOY_ENV", "dev"),
+		"version":        build_id,
+		"build":          getEnv("BUILD_ID", "local-build"),
+		"commit":         CommitSHA,
+		"branch":         git_branch,
+		"build_time":     build_time,
+		"deployed_by":    deployed_by,
+		"env":            getEnv("DEPLOY_ENV", "dev"),
+		"deploy_message": getEnv("DEPLOY_MESSAGE", "Ave Mundus!"),
 	}
 
 	payload, err := jsonIfy(version)
