@@ -34,4 +34,4 @@ spec:
             - containerPort: 8000
           env:
             - name: DEPLOY_MESSAGE
-              value: "Updated message!"
+              value: {{ .Values.DEPLOY_MESSAGE }}
