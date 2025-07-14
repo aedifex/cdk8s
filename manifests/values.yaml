@@ -1,1 +1,3 @@
 imageTag: <+pipeline.sequenceId>
+
+DEPLOY_MESSAGE: "Ave, Mundus"
