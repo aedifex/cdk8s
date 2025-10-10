@@ -29,7 +29,7 @@ service:
             - spec:
                 connectorRef: account.Aedifex_Dev
                 imagePath: harness
-                tag: <+pipeline.sequenceId>
+                tag: "104"
                 digest: ""
                 region: us-west-2
                 registryId: "824987503353"
