@@ -1,4 +1,4 @@
 # imageTag: <+pipeline.sequenceId>
 imageTag: 100
 
-DEPLOY_MESSAGE: "Hello Minikube"
+DEPLOY_MESSAGE: "Hello baby! I love you - congrats!"
