@@ -1,4 +1,4 @@
 # imageTag: <+pipeline.sequenceId>
-imageTag: 104
+imageTag: 108
 
 DEPLOY_MESSAGE: "Hello baby! I love you - congrats!"
